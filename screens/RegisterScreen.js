@@ -28,7 +28,7 @@ const handleRegister = async () => {
   setLoading(true);
 
   try {
-    const res = await fetch('http://192.168.1.7:8000/register', {
+    const res = await fetch('http://10.240.107.47:8000/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

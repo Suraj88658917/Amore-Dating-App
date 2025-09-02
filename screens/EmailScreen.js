@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,79 +6,72 @@ import {
   SafeAreaView,
   Platform,
   TouchableOpacity,
+  Image,
   TextInput,
-} from "react-native";
-import { Fontisto, Ionicons } from "@expo/vector-icons"; 
-import { useNavigation } from "@react-navigation/native";
+} from 'react-native';
+import { Ionicons, Fontisto } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import {
   getRegistrationProgress,
   saveRegistrationProgress,
-} from "../utils/registrationUtils";
+} from '../utils/registrationUtils';
 
 const EmailScreen = () => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const navigation = useNavigation();
 
   useEffect(() => {
-    getRegistrationProgress("Email").then((progressData) => {
+    getRegistrationProgress('Email').then(progressData => {
       if (progressData) {
-        setEmail(progressData.email || "");
+        setEmail(progressData.email || '');
       }
     });
   }, []);
 
   const handleNext = () => {
-    if (email.trim() !== "") {
-      saveRegistrationProgress("Email", { email });
+    if (email.trim() !== '') {
+      saveRegistrationProgress('Email', { email });
+      navigation.navigate('PasswordScreen', { email });
+    } else {
+      alert('Email is required');
     }
-    navigation.navigate("PasswordScreen", { email });
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
-        <Ionicons name="heart" size={60} color="#ff4d6d" />
-        <Text style={styles.headerText}>Find Your Match</Text>
+        <Image
+          style={styles.logo}
+          source={{
+            uri: 'https://cdn-icons-png.flaticon.com/128/10613/10613685.png',
+          }}
+          resizeMode="contain"
+        />
       </View>
 
-      <View style={styles.content}>
-        <Text style={styles.title}>What’s your email?</Text>
+      <View style={styles.body}>
+        <View style={styles.iconWrapper}>
+          <Fontisto name="email" size={24} color="#ff4d6d" />
+        </View>
+        <Text style={styles.title}>What's your email?</Text>
         <Text style={styles.subtitle}>
-          We’ll use it to keep your account secure 💌
+          Email verification helps us secure your account
         </Text>
 
-        {/* Input */}
-        <View style={styles.inputContainer}>
-          <Fontisto
-            name="email"
-            size={20}
-            color="#ff4d6d"
-            style={{ marginRight: 8 }}
-          />
-          <TextInput
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-            placeholder="Enter your email"
-            placeholderTextColor={"#aaa"}
-            style={styles.input}
-            keyboardType="email-address"
-          />
-        </View>
+        <TextInput
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Enter your email"
+          placeholderTextColor="#BEBEBE"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          style={styles.input}
+        />
 
-        {/* Button */}
-        <TouchableOpacity
-          onPress={handleNext}
-          activeOpacity={0.8}
-          style={styles.nextButton}
-        >
-          <Text style={styles.nextText}>Next</Text>
-          <Ionicons
-            name="chevron-forward-circle"
-            size={28}
-            color="white"
-            style={{ marginLeft: 6 }}
-          />
+        <Text style={styles.note}>You will be asked to verify your email later</Text>
+
+        <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+          <Ionicons name="chevron-forward-circle" size={55} color="#ff4d6d" />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -90,68 +83,60 @@ export default EmailScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff0f5", // light romantic background
-    paddingTop: Platform.OS === "android" ? 35 : 0,
+    backgroundColor: '#fff0f5',
+    paddingTop: Platform.OS === 'android' ? 35 : 0,
   },
   header: {
-    marginTop: 60,
-    alignItems: "center",
+    alignItems: 'center',
+    marginTop: 40,
   },
-  headerText: {
-    fontSize: 28,
-    color: "#ff4d6d",
-    fontWeight: "bold",
-    marginTop: 10,
+  logo: {
+    width: 120,
+    height: 50,
   },
-  content: {
-    flex: 1,
-    marginTop: 60,
+  body: {
+    marginTop: 50,
     marginHorizontal: 25,
   },
+  iconWrapper: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#ffe6ee',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   title: {
-    fontSize: 26,
-    fontWeight: "bold",
-    color: "#333",
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#333',
+    marginBottom: 10,
   },
   subtitle: {
-    marginTop: 10,
     fontSize: 16,
-    color: "gray",
-  },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 25,
-    backgroundColor: "white",
-    borderRadius: 25,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    elevation: 4, // Android shadow
-    shadowColor: "#000", // iOS shadow
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    color: '#666',
+    marginBottom: 30,
   },
   input: {
-    flex: 1,
-    fontSize: 16,
-    color: "#333",
+    width: '100%',
+    padding: 15,
+    borderRadius: 12,
+    backgroundColor: '#fff',
+    fontSize: 18,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  note: {
+    fontSize: 14,
+    color: '#999',
+    marginBottom: 30,
   },
   nextButton: {
-    marginTop: 40,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#ff4d6d",
-    paddingVertical: 15,
-    borderRadius: 30,
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 5,
-  },
-  nextText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
+    alignSelf: 'flex-end',
   },
 });

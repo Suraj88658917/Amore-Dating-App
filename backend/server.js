@@ -12,7 +12,6 @@ const Profile = require('./models/Profile');
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -105,6 +104,56 @@ app.get('/profile', async (req, res) => {
     res.status(401).json({ error: 'Invalid token' });
   }
 });
+
+// ===== SEND OTP =====
+app.post('/sendOtp', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email required' });
+
+  const user = await User.findOne({ email: email.toLowerCase() });
+  if (!user) return res.status(404).json({ error: 'User not found' });
+
+  const otp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
+  user.otp = otp;
+  await user.save();
+
+  console.log(`OTP for ${email}: ${otp}`);
+  res.json({ message: 'OTP sent', otp }); // send OTP in response for testing
+});
+
+// ===== CONFIRM SIGNUP =====
+app.post('/confirmSignup', async (req, res) => {
+  const { email, otpCode } = req.body;
+  if (!email || !otpCode) return res.status(400).json({ error: 'Email and OTP required' });
+
+  const user = await User.findOne({ email: email.toLowerCase() });
+  if (!user) return res.status(404).json({ error: 'User not found' });
+
+  if (user.otp != otpCode) return res.status(401).json({ error: 'Invalid OTP' });
+
+  user.otp = null;
+  user.isVerified = true; // optional
+  await user.save();
+
+  res.json({ message: 'Signup confirmed' });
+});
+// ===== RESEND OTP =====
+app.post('/resendOtp', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email required' });
+
+  const user = await User.findOne({ email: email.toLowerCase() });
+  if (!user) return res.status(404).json({ error: 'User not found' });
+
+  const otp = Math.floor(100000 + Math.random() * 900000);
+  user.otp = otp;
+  await user.save();
+
+  console.log(`Resent OTP for ${email}: ${otp}`);
+  res.json({ message: 'OTP resent', otp });
+});
+
+
 
 // ===== START SERVER =====
 app.listen(PORT, () => {
