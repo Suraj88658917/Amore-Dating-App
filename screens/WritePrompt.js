@@ -31,13 +31,13 @@ const WritePrompt = () => {
         <View style={styles.headerLeft}>
           <Ionicons
             name="chevron-back-outline"
-            size={25}
-            color="black"
+            size={28}
+            color="white"
             onPress={() => navigation.goBack()}
           />
           <Text style={styles.headerTitle}>Write Answer</Text>
         </View>
-        <Pressable onPress={handleDone}>
+        <Pressable style={styles.doneButton} onPress={handleDone}>
           <Text style={styles.doneText}>Done</Text>
         </Pressable>
       </View>
@@ -52,6 +52,7 @@ const WritePrompt = () => {
           <TextInput
             multiline
             placeholder="Enter your answer"
+            placeholderTextColor="#999"
             value={answer}
             onChangeText={text => setAnswer(text)}
             style={styles.textInput}
@@ -67,55 +68,66 @@ export default WritePrompt;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#fff0f5',
     paddingTop: Platform.OS === 'android' ? 35 : 0,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'white',
+    backgroundColor: '#900C3F',
     paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderBottomColor: '#E0E0E0',
-    borderBottomWidth: 0.5,
+    paddingHorizontal: 15,
   },
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: 8,
   },
   headerTitle: {
-    fontSize: 15,
-    fontWeight: '500',
+    fontSize: 18,
+    fontWeight: '600',
+    color: 'white',
+  },
+  doneButton: {
+    backgroundColor: 'white',
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    borderRadius: 20,
   },
   doneText: {
-    fontSize: 15,
-    color: '#5a0763',
-    fontWeight: '500',
+    fontSize: 14,
+    color: '#900C3F',
+    fontWeight: '600',
   },
   content: {
-    padding: 12,
+    padding: 20,
   },
   questionBox: {
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#ffe6f0',
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 15,
+    marginBottom: 20,
   },
   questionText: {
     fontSize: 16,
     fontWeight: '500',
+    color: '#5a0763',
   },
   answerBox: {
-    padding: 10,
-    borderRadius: 10,
-    height: 100,
-    marginTop: 15,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 15,
+    minHeight: 120,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 2,
   },
   textInput: {
-    fontSize: 17,
+    fontSize: 16,
     flex: 1,
     textAlignVertical: 'top',
+    color: '#202020',
   },
 });

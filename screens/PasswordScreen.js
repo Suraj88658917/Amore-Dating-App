@@ -1,78 +1,89 @@
-import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   SafeAreaView,
-  TextInput,
-  TouchableOpacity,
-  Image,
   Platform,
+  TouchableOpacity,
+  TextInput,
 } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { saveRegistrationProgress } from '../utils/registrationUtils';
+import axios from 'axios';
+
 
 const PasswordScreen = () => {
+  const [password, setPassword] = useState('');
   const route = useRoute();
   const navigation = useNavigation();
-  const email = route.params?.email;
-  const [password, setPassword] = useState('');
+  const email = route?.params?.email;
+
+  const handleSendOtp = async () => {
+  if (!email) return;
+  try {
+    const response = await axios.post(`${BASE_URL}/sendOtp`, {
+      email,
+      password,
+    });
+    console.log(response.data.message);
+  } catch (error) {
+    console.log('Error sending the OTP', error);
+  } finally {
+    // Always navigate, whether API works or fails
+    navigation.navigate("VerificationCode", { email });
+  }
+};
+
 
   const handleNext = () => {
     if (password.trim() !== '') {
-      console.log('Email:', email, 'Password:', password);
-      // Navigate to verification code screen and pass email & password
-      navigation.navigate('VerificationCode', {
-        email,
-        password,
-      });
-    } else {
-      alert('Please enter a password');
+      saveRegistrationProgress('Password', { password });
     }
+    handleSendOtp();
   };
 
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <View style={styles.icon}>
-          <MaterialCommunityIcons name="lock-outline" size={26} color="black" />
-        </View>
-        <Image
-          style={styles.logo}
-          source={{
-            uri: 'https://cdn-icons-png.flaticon.com/128/10613/10613685.png',
-          }}
-        />
+        <Ionicons name="lock-closed" size={60} color="#ff4d6d" />
+        <Text style={styles.headerText}>Secure Your Love</Text>
       </View>
 
-      {/* Form */}
-      <View style={styles.form}>
-        <Text style={styles.title}>Set your password</Text>
+      {/* Content */}
+      <View style={styles.content}>
+        <Text style={styles.title}>Choose a password 🔒</Text>
         <Text style={styles.subtitle}>
-          Keep your account safe by choosing a strong password
+          Keep your heart safe with a strong password ❤️
         </Text>
 
-        <TextInput
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Enter your password"
-          secureTextEntry
-          placeholderTextColor="#BEBEBE"
-          style={styles.input}
-        />
+        {/* Input field */}
+        <View style={styles.inputContainer}>
+          <Ionicons name="key-outline" size={22} color="#ff4d6d" style={{ marginRight: 10 }} />
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Enter your password"
+            secureTextEntry
+            placeholderTextColor="#aaa"
+            style={styles.input}
+          />
+        </View>
 
-        <Text style={styles.note}>Note: Your password will be kept secure</Text>
+        <Text style={styles.note}>✨ Your details are safe with us</Text>
+
+        {/* Next Button */}
+        <TouchableOpacity
+          style={styles.nextBtn}
+          onPress={handleNext}
+          activeOpacity={0.85}
+        >
+          <Text style={styles.nextText}>Continue</Text>
+          <Ionicons name="chevron-forward-circle" size={28} color="white" />
+        </TouchableOpacity>
       </View>
-
-      {/* Next Button */}
-      <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
-        <Ionicons
-          name="chevron-forward-circle-outline"
-          size={45}
-          color="#581845"
-        />
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -82,37 +93,74 @@ export default PasswordScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#fff0f5', // romantic light pink background
     paddingTop: Platform.OS === 'android' ? 35 : 0,
   },
   header: {
+    marginTop: 60,
+    alignItems: 'center',
+  },
+  headerText: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#ff4d6d',
+    marginTop: 10,
+  },
+  content: {
+    flex: 1,
+    marginTop: 50,
+    marginHorizontal: 25,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  subtitle: {
+    marginTop: 8,
+    fontSize: 15,
+    color: 'gray',
+  },
+  inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 80,
-    marginHorizontal: 20,
-    gap: 10,
+    marginTop: 25,
+    backgroundColor: 'white',
+    borderRadius: 25,
+    paddingHorizontal: 15,
+    paddingVertical: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
   },
-  icon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 2,
-    borderColor: 'black',
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: '#333',
+  },
+  note: {
+    fontSize: 14,
+    color: 'gray',
+    marginTop: 10,
+    marginBottom: 30,
+  },
+  nextBtn: {
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#ff4d6d',
+    paddingVertical: 15,
+    borderRadius: 30,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 5,
   },
-  logo: { width: 100, height: 40 },
-  form: { marginTop: 30, marginHorizontal: 20 },
-  title: { fontSize: 25, fontWeight: 'bold' },
-  subtitle: { marginTop: 10, fontSize: 15, color: 'gray' },
-  input: {
-    width: '100%',
-    marginTop: 25,
-    borderBottomWidth: 1,
-    borderBottomColor: 'black',
-    fontSize: 22,
-    paddingBottom: 10,
+  nextText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginRight: 8,
   },
-  note: { color: 'gray', marginTop: 7, fontSize: 15 },
-  nextBtn: { marginTop: 30, marginLeft: 'auto', marginRight: 20 },
 });

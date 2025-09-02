@@ -5,31 +5,30 @@ import {
   SafeAreaView,
   Platform,
   Pressable,
-  Image,
   Animated,
   Easing,
-} from 'react-native';
-import React, { useRef, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+  ImageBackground,
+} from "react-native";
+import React, { useRef, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 
+ // screen --
 const BasicInfo = () => {
   const navigation = useNavigation();
-
-  // Animation value
   const bounceValue = useRef(new Animated.Value(0)).current;
 
-  // Animate image
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
         Animated.timing(bounceValue, {
-          toValue: -20, // move up
+          toValue: -15,
           duration: 800,
           easing: Easing.out(Easing.quad),
           useNativeDriver: true,
         }),
         Animated.timing(bounceValue, {
-          toValue: 0, // move back
+          toValue: 0,
           duration: 800,
           easing: Easing.in(Easing.quad),
           useNativeDriver: true,
@@ -39,61 +38,96 @@ const BasicInfo = () => {
   }, [bounceValue]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={{ marginTop: 80 }}>
-        <Text style={styles.title}>You're one of a kind.</Text>
-        <Text style={[styles.title, { marginTop: 10 }]}>
-          Your profile should be too.
-        </Text>
-      </View>
+    <ImageBackground
+      source={{
+       uri: "https://images.unsplash.com/photo-1509042239860-f550ce710b93"
 
-      <View style={{ alignItems: 'center', marginTop: 40 }}>
-        <Animated.Image
-          source={require("../assets/3.png")}
-          style={{
-            width: 260,
-            height: 260,
-            transform: [{ translateY: bounceValue }],
-          }}
-          resizeMode="contain"
-        />
-      </View>
+      }}
+      style={styles.bg}
+    >
+      <SafeAreaView style={styles.container}>
+        {/* Header text */}
+        <View style={styles.header}>
+          <Text style={styles.title}>You're one of a kind.</Text>
+          <Text style={styles.subtitle}>
+            Your profile should be too ✨
+          </Text>
+        </View>
 
-      <Pressable
-        onPress={() => navigation.navigate('Name')}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>Enter Basic Info</Text>
-      </Pressable>
-    </SafeAreaView>
+  
+
+        {/* CTA button */}
+        <Pressable
+          onPress={() => navigation.navigate("Name")}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Enter Basic Info</Text>
+          <Ionicons
+            name="arrow-forward-circle"
+            size={26}
+            color="#fff"
+            style={{ marginLeft: 8 }}
+          />
+        </Pressable>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
 export default BasicInfo;
 
 const styles = StyleSheet.create({
+  bg: {
+    flex: 1,
+    resizeMode: "cover",
+    backgroundColor: "#fff",
+  },
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? 35 : 0,
-    backgroundColor: 'white',
-    justifyContent: 'space-between', // ensure button stays at bottom
+    paddingTop: Platform.OS === "android" ? 35 : 0,
+    justifyContent: "space-between",
+    paddingHorizontal: 25,
+    paddingBottom: 50,
+  },
+  header: {
+    marginTop: 40,
   },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginLeft: 20,
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "white",
+    textAlign: "center",
+  },
+  subtitle: {
+    fontSize: 16,
+    color: "rgba(255,255,255,0.9)",
+    textAlign: "center",
+    marginTop: 10,
+  },
+  illustrationWrapper: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  illustration: {
+    width: 260,
+    height: 260,
   },
   button: {
-    marginBottom: 70, // safe padding
-    backgroundColor: '#900C3F',
-    padding: 15,
-    marginHorizontal: 20,
-    borderRadius: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#FF3366",
+    paddingVertical: 15,
+    borderRadius: 30,
+    shadowColor: "#FF3366",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 6,
   },
   buttonText: {
-    textAlign: 'center',
-    color: 'white',
-    fontWeight: '600',
-    fontSize: 15,
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 18,
   },
 });

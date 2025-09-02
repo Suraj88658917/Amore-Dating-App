@@ -1,3 +1,4 @@
+// DateOfBirthScreen.js
 import React, { useRef, useState, useEffect } from 'react';
 import {
   StyleSheet,
@@ -5,7 +6,6 @@ import {
   View,
   SafeAreaView,
   Platform,
-  Image,
   TextInput,
   TouchableOpacity,
 } from 'react-native';
@@ -38,7 +38,7 @@ const DateOfBirthScreen = () => {
     if (day && month && year) {
       const dateOfBirth = `${day}/${month}/${year}`;
       saveRegistrationProgress('Birth', { dateOfBirth });
-      navigation.navigate('LocationScreen'); // navigate to next screen
+      navigation.navigate('LocationScreen');
     }
   };
 
@@ -58,15 +58,10 @@ const DateOfBirthScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.icon}>
-          <MaterialCommunityIcons name="calendar-blank" size={24} color="black" />
+          <MaterialCommunityIcons name="calendar-blank" size={24} color="#ff3f6c" />
         </View>
-        <Image
-          style={styles.logo}
-          source={{ uri: 'https://cdn-icons-png.flaticon.com/128/10613/10613685.png' }}
-        />
+        <Text style={styles.title}>What's your date of birth?</Text>
       </View>
-
-      <Text style={styles.title}>What's your date of birth?</Text>
 
       <View style={styles.inputsContainer}>
         <TextInput
@@ -74,7 +69,7 @@ const DateOfBirthScreen = () => {
           onChangeText={handleDayChange}
           autoFocus
           placeholder="DD"
-          placeholderTextColor="#BEBEBE"
+          placeholderTextColor="#ff6b81"
           keyboardType="numeric"
           maxLength={2}
           style={styles.input}
@@ -84,7 +79,7 @@ const DateOfBirthScreen = () => {
           onChangeText={handleMonthChange}
           ref={monthRef}
           placeholder="MM"
-          placeholderTextColor="#BEBEBE"
+          placeholderTextColor="#ff6b81"
           keyboardType="numeric"
           maxLength={2}
           style={styles.input}
@@ -94,15 +89,15 @@ const DateOfBirthScreen = () => {
           onChangeText={handleYearChange}
           ref={yearRef}
           placeholder="YYYY"
-          placeholderTextColor="#BEBEBE"
+          placeholderTextColor="#ff6b81"
           keyboardType="numeric"
           maxLength={4}
-          style={[styles.input, { width: 80 }]}
+          style={[styles.input, { width: 90 }]}
         />
       </View>
 
       <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
-        <Ionicons name="chevron-forward-circle-outline" size={45} color="#581845" />
+        <Ionicons name="chevron-forward-circle" size={55} color="#ff3f6c" />
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -113,50 +108,55 @@ export default DateOfBirthScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#fff0f5',
     paddingTop: Platform.OS === 'android' ? 35 : 0,
     paddingHorizontal: 20,
   },
   header: {
-    flexDirection: 'row',
     alignItems: 'center',
     marginTop: 80,
-    gap: 10,
   },
   icon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 2,
-    borderColor: 'black',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#ffe4e1',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  logo: {
-    width: 100,
-    height: 40,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 4,
   },
   title: {
-    fontSize: 25,
+    fontSize: 26,
     fontWeight: 'bold',
-    marginTop: 15,
+    color: '#ff3f6c',
+    textAlign: 'center',
   },
   inputsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 10,
+    gap: 15,
     marginTop: 80,
   },
   input: {
-    borderBottomWidth: 1,
-    borderColor: 'black',
-    padding: 10,
-    width: 60,
+    borderBottomWidth: 2,
+    borderColor: '#ff6b81',
+    width: 70,
     fontSize: 22,
     textAlign: 'center',
+    paddingVertical: 10,
+    borderRadius: 8,
+    backgroundColor: '#fff0f5',
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 3,
   },
   nextBtn: {
-    marginTop: 30,
+    marginTop: 50,
     alignSelf: 'flex-end',
   },
 });

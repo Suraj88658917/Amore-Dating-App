@@ -1,53 +1,40 @@
-// AuthContext.js
-import React, { createContext, useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { createContext, useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
-const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(null);
+export const AuthProvider = ({ children }) => {
+  const [userToken, setUserToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadToken = async () => {
-      try {
-        const storedToken = await AsyncStorage.getItem("token");
-        if (storedToken) {
-          setToken(storedToken);
-        }
-      } catch (error) {
-        console.error("Error loading token:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const login = async (token) => {
+    setUserToken(token);
+    await AsyncStorage.setItem('userToken', token);
+  };
 
-    loadToken();
+  const logout = async () => {
+    setUserToken(null);
+    await AsyncStorage.removeItem('userToken');
+  };
+
+  const checkToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      if (token) setUserToken(token);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    checkToken();
   }, []);
 
-  const saveToken = async (newToken) => {
-    try {
-      setToken(newToken);
-      await AsyncStorage.setItem("token", newToken);
-    } catch (error) {
-      console.error("Error saving token:", error);
-    }
-  };
-
-  const removeToken = async () => {
-    try {
-      setToken(null);
-      await AsyncStorage.removeItem("token");
-    } catch (error) {
-      console.error("Error removing token:", error);
-    }
-  };
-
   return (
-    <AuthContext.Provider value={{ token, setToken: saveToken, removeToken, loading }}>
+    <AuthContext.Provider value={{ userToken, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
-export { AuthContext, AuthProvider };

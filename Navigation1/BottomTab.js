@@ -16,14 +16,21 @@ const BottomTab = () => (
       tabBarIcon: ({ focused, color, size }) => {
         let iconName;
 
-        if (route.name === "Explore") {
-          iconName = focused ? "search" : "search-outline";
-        } else if (route.name === "Matches") {
-          iconName = focused ? "heart" : "heart-outline";
-        } else if (route.name === "Chat") {
-          iconName = focused ? "chatbubble" : "chatbubble-outline";
-        } else if (route.name === "Profile") {
-          iconName = focused ? "person" : "person-outline";
+        switch (route.name) {
+          case "Explore":
+            iconName = focused ? "search" : "search-outline";
+            break;
+          case "Matches":
+            iconName = focused ? "heart" : "heart-outline";
+            break;
+          case "Chat":
+            iconName = focused ? "chatbubble" : "chatbubble-outline";
+            break;
+          case "Profile":
+            iconName = focused ? "person" : "person-outline";
+            break;
+          default:
+            iconName = "ellipse";
         }
 
         return <Ionicons name={iconName} size={size} color={color} />;
@@ -32,10 +39,10 @@ const BottomTab = () => (
       tabBarInactiveTintColor: "gray",
     })}
   >
-    <Tab.Screen name="Explore" component={Home} />
-    <Tab.Screen name="Matches" component={Matches} />
-    <Tab.Screen name="Chat" component={Messages} />
-    <Tab.Screen name="Profile" component={Profile} />
+    <Tab.Screen name="Explore" component={Home} key="tab-explore" />
+    <Tab.Screen name="Matches" component={Matches} key="tab-matches" />
+    <Tab.Screen name="Chat" component={Messages} key="tab-chat" />
+    <Tab.Screen name="Profile" component={Profile} key="tab-profile" />
   </Tab.Navigator>
 );
 

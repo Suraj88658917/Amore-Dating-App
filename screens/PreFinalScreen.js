@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,14 +7,12 @@ import {
   Pressable,
   ActivityIndicator,
   Platform,
-  Image,
+  ImageBackground,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import { AuthContext } from '../AuthContext';
 
 const PreFinalScreen = () => {
-  const { setToken } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
@@ -23,9 +21,7 @@ const PreFinalScreen = () => {
       setLoading(true);
       const fakeToken = 'user_token_123';
       await AsyncStorage.setItem('token', fakeToken);
-      setToken(fakeToken);
-
-      navigation.replace("Home");
+      navigation.replace('Home');
     } catch (error) {
       console.log('Error finishing registration:', error);
     } finally {
@@ -34,52 +30,81 @@ const PreFinalScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>All set to register.</Text>
-        <Text style={[styles.title, { marginTop: 10 }]}>
-          Setting up your profile for you.
-        </Text>
-      </View>
+    <ImageBackground
+      source={require('../assets/6.jpg')} // Replace with your background image
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <SafeAreaView style={styles.container}>
+        {/* Header Text */}
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>You're All Set!</Text>
+          <Text style={styles.subtitle}>Let's set up your profile and start matching.</Text>
+        </View>
 
-      {/* Display image */}
-      <Image
-        source={require('../assets/6.jpg')} // replace with your image
-        style={styles.image}
-        resizeMode="contain"
-      />
-
-      <Pressable style={styles.button} onPress={finishRegistration}>
-        {loading ? (
-          <ActivityIndicator size="small" color="white" />
-        ) : (
-          <Text style={styles.buttonText}>Finish Registering</Text>
-        )}
-      </Pressable>
-    </SafeAreaView>
+        {/* Finish Button */}
+        <Pressable
+          onPress={finishRegistration}
+          style={({ pressed }) => [styles.button, pressed && { opacity: 0.8 }]}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <Text style={styles.buttonText}>Finish & Explore</Text>
+          )}
+        </Pressable>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
 export default PreFinalScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'white', paddingTop: Platform.OS === 'android' ? 35 : 0 },
-  textContainer: { marginTop: 80, marginLeft: 20 },
-  title: { fontSize: 32, fontWeight: 'bold', fontFamily: 'GeezaPro-Bold' },
-  image: {
-    height: 260,
-    width: 300,
-    alignSelf: 'center',
-    marginTop: 40,
-    borderRadius: 260,
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  container: {
+    flex: 1,
+    paddingTop: Platform.OS === 'android' ? 35 : 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.3)', // semi-transparent overlay
+  },
+  textContainer: {
+    marginBottom: 60,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 34,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 18,
+    color: '#ffe6f0',
+    textAlign: 'center',
+    marginTop: 10,
   },
   button: {
-    marginTop: 'auto',
-    backgroundColor: '#900C3F',
-    padding: 15,
-    marginHorizontal: 20,
-    borderRadius: 10,
-    marginBottom: 20,
+    backgroundColor: '#ff3366',
+    paddingVertical: 18,
+    paddingHorizontal: 50,
+    borderRadius: 30,
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
   },
-  buttonText: { textAlign: 'center', color: 'white', fontWeight: '600', fontSize: 15 },
+  buttonText: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 16,
+    textAlign: 'center',
+  },
 });

@@ -8,6 +8,7 @@ import {
   Image,
   Pressable,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import { Ionicons, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -17,19 +18,9 @@ const LookingFor = () => {
   const [lookingFor, setLookingFor] = useState('');
   const navigation = useNavigation();
 
-  useEffect(() => {
-    getRegistrationProgress('LookingFor').then(progressData => {
-      if (progressData) {
-        setLookingFor(progressData.lookingFor || '');
-      }
-    });
-  }, []);
-
   const handleNext = () => {
-    if (lookingFor.trim() !== '') {
-      saveRegistrationProgress('LookingFor', { lookingFor });
-    }
-    navigation.navigate('HomeTown');
+    if (lookingFor.trim() !== '') saveRegistrationProgress('LookingFor', { lookingFor });
+    navigation.navigate('HomeTown'); // next screen
   };
 
   const options = [
@@ -41,12 +32,19 @@ const LookingFor = () => {
     'Figuring out my dating goals',
   ];
 
+  useEffect(() => {
+    getRegistrationProgress('LookingFor').then(progressData => {
+      if (progressData) setLookingFor(progressData.lookingFor || '');
+    });
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ marginTop: 80, marginHorizontal: 20 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 20 }}
+       showsVerticalScrollIndicator={false}>
+        <View style={styles.header}>
           <View style={styles.icon}>
-            <MaterialCommunityIcons name="hand-heart" size={23} color="black" />
+            <MaterialCommunityIcons name="hand-heart" size={26} color="#ff3f6c" />
           </View>
           <Image
             style={styles.logo}
@@ -55,32 +53,44 @@ const LookingFor = () => {
         </View>
 
         <Text style={styles.title}>What's your dating intention?</Text>
-        <Text style={styles.subtitle}>Select all people you're open to meeting</Text>
+        <Text style={styles.subtitle}>Select all that describe you 💌</Text>
 
-        <View style={{ marginTop: 30 }}>
+        <View style={styles.optionsContainer}>
           {options.map(option => (
-            <View key={option} style={styles.optionRow}>
-              <Text style={styles.optionText}>{option}</Text>
-              <Pressable onPress={() => setLookingFor(option)}>
-                <FontAwesome
-                  name="circle"
-                  size={26}
-                  color={lookingFor === option ? '#581845' : '#F0F0F0'}
-                />
-              </Pressable>
-            </View>
+            <Pressable
+              key={option}
+              onPress={() => setLookingFor(option)}
+              style={[
+                styles.optionButton,
+                lookingFor === option && styles.optionButtonSelected,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.optionText,
+                  lookingFor === option && styles.optionTextSelected,
+                ]}
+              >
+                {option}
+              </Text>
+              <FontAwesome
+                name={lookingFor === option ? 'check-circle' : 'circle-thin'}
+                size={26}
+                color={lookingFor === option ? '#ff3f6c' : '#ccc'}
+              />
+            </Pressable>
           ))}
 
           <View style={styles.visibleRow}>
-            <MaterialCommunityIcons name="checkbox-marked" size={25} color="#900C3F" />
+            <MaterialCommunityIcons name="checkbox-marked" size={25} color="#ff3f6c" />
             <Text style={styles.visibleText}>Visible on profile</Text>
           </View>
         </View>
 
-        <TouchableOpacity onPress={handleNext} activeOpacity={0.8} style={styles.nextBtn}>
-          <Ionicons name="chevron-forward-circle-outline" size={45} color="#581845" />
+        <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
+          <Ionicons name="chevron-forward-circle" size={55} color="#ff3f6c" />
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -90,54 +100,85 @@ export default LookingFor;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#fff0f5',
     paddingTop: Platform.OS === 'android' ? 35 : 0,
+    paddingHorizontal: 20,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
   },
   icon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 2,
-    borderColor: 'black',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#ffe4e1',
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
   },
   logo: {
     width: 100,
     height: 40,
-    marginLeft: 10,
+    marginLeft: 15,
   },
   title: {
-    fontSize: 25,
+    fontSize: 26,
     fontWeight: 'bold',
-    marginTop: 15,
+    color: '#ff3f6c',
+    marginBottom: 10,
   },
   subtitle: {
-    fontSize: 15,
-    marginTop: 20,
-    color: 'gray',
+    fontSize: 14,
+    color: '#555',
+    marginBottom: 30,
   },
-  optionRow: {
+  optionsContainer: {
+    marginVertical: 10,
+  },
+  optionButton: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    marginVertical: 6,
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    borderRadius: 15,
+    marginBottom: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  optionButtonSelected: {
+    backgroundColor: '#ffd6e0',
   },
   optionText: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '500',
+    color: '#333',
+  },
+  optionTextSelected: {
+    color: '#ff3f6c',
+    fontWeight: '600',
   },
   visibleRow: {
-    marginTop: 30,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+    marginTop: 20,
   },
   visibleText: {
-    fontSize: 15,
+    fontSize: 14,
+    color: '#555',
   },
   nextBtn: {
-    marginTop: 30,
+    marginTop: 40,
     alignSelf: 'flex-end',
   },
 });

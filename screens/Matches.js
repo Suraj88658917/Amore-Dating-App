@@ -298,7 +298,7 @@ const LikesScreen = () => {
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
-          backgroundColor: '#50b8f9ff',
+          backgroundColor: '#edededff',
           justifyContent: likes?.length > 0 ? 'flex-start' : 'center',
           padding: 15,
         }}

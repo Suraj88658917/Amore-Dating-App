@@ -1,33 +1,29 @@
-import React, { useEffect, useRef, useState } from 'react';
+// VerificationCodeScreen.js
+import React, { useState, useRef, useEffect } from "react";
 import {
-  StyleSheet,
-  Text,
-  View,
   SafeAreaView,
+  View,
+  Text,
   TextInput,
   TouchableOpacity,
+  StyleSheet,
   Platform,
-} from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 
-
-const BASE_URL = 'https://your-backend-url.com'; // replace with your backend
-
-const OtpScreen = () => {
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+const VerificationCodeScreen = () => {
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputs = useRef([]);
-  const route = useRoute();
   const navigation = useNavigation();
-  const email = route?.params?.email;
 
+  // Navigate automatically when all digits are filled
   useEffect(() => {
-    if (otp.every(digit => digit !== '')) {
-      // start a 3-second timer after all digits are filled
+    if (otp.every((digit) => digit !== "")) {
       const timer = setTimeout(() => {
-        handleConfirmOtp();
-      }, 3000);
-
-      return () => clearTimeout(timer); // cleanup if OTP changes
+        navigation.navigate("BirthScreen");
+      }, 800); // 0.8 sec delay
+      return () => clearTimeout(timer);
     }
   }, [otp]);
 
@@ -50,55 +46,32 @@ const OtpScreen = () => {
     setOtp(newOtp);
   };
 
-  const handleConfirmOtp = async () => {
-    const otpCode = otp.join('');
-    if (!email || !otpCode) return;
-
-    try {
-      const response = await axios.post(`${BASE_URL}/confirmSignup`, { email, otpCode });
-      if (response.status === 200) {
-        console.log('OTP verified', response.data);
-        navigation.navigate('BirthScreen'); // navigate automatically
-      }
-    } catch (error) {
-      console.log('Error confirming OTP', error);
-      navigation.navigate('BirthScreen'); // fallback navigate even if error
-    }
-  };
-
-  const handleResendOtp = async () => {
-    setOtp(['', '', '', '', '', '']);
-    try {
-      const response = await axios.post(`${BASE_URL}/resendOtp`, { email });
-      console.log('OTP resent', response.data);
-    } catch (error) {
-      console.log('Error resending OTP', error);
-    }
+  const handleResendOtp = () => {
+    setOtp(["", "", "", "", "", ""]);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Verification Code</Text>
+        <Ionicons name="heart" size={60} color="#ff6b81" />
+        <Text style={styles.title}>Verify Your Account</Text>
         <Text style={styles.subtitle}>
-          Enter the 6-digit code sent to your email
+          Enter the 6-digit code sent to your email 💌
         </Text>
       </View>
 
       <View style={styles.otpContainer}>
-        {otp.map((digit, index) => (
+        {otp.map((_, index) => (
           <TextInput
             key={index}
-            ref={el => (inputs.current[index] = el)}
             style={styles.otpInput}
+            ref={(el) => (inputs.current[index] = el)}
             keyboardType="number-pad"
             maxLength={1}
-            value={digit}
-            onChangeText={text => handleChange(text, index)}
+            value={otp[index]}
+            onChangeText={(text) => handleChange(text, index)}
             onKeyPress={({ nativeEvent }) => {
-              if (nativeEvent.key === 'Backspace') {
-                handleBackspace('', index);
-              }
+              if (nativeEvent.key === "Backspace") handleBackspace("", index);
             }}
             autoFocus={index === 0}
           />
@@ -106,56 +79,74 @@ const OtpScreen = () => {
       </View>
 
       <TouchableOpacity style={styles.resendBtn} onPress={handleResendOtp}>
+        <Ionicons name="refresh" size={18} color="#fff" />
         <Text style={styles.resendText}>Resend Code</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
 };
 
-export default OtpScreen;
+export default VerificationCodeScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    paddingTop: Platform.OS === 'android' ? 35 : 0,
-    alignItems: 'center',
+    paddingTop: Platform.OS === "android" ? 35 : 0,
+    alignItems: "center",
+    backgroundColor: "#ffe4e1",
   },
   header: {
-    marginTop: 50,
-    alignItems: 'center',
+    marginTop: 60,
+    alignItems: "center",
   },
   title: {
-    fontSize: 18,
-    fontWeight: '500',
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#ff3f6c",
+    marginTop: 10,
   },
   subtitle: {
     fontSize: 14,
-    color: 'gray',
-    marginTop: 5,
+    color: "#555",
+    marginTop: 6,
+    textAlign: "center",
+    paddingHorizontal: 30,
   },
   otpContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '80%',
-    marginTop: 30,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 50,
+    width: "80%",
   },
   otpInput: {
-    width: 45,
-    height: 45,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    textAlign: 'center',
-    fontSize: 18,
-    color: '#333',
+    width: 50,
+    height: 55,
+    borderWidth: 2,
+    borderColor: "#ff6b81",
+    borderRadius: 12,
+    textAlign: "center",
+    fontSize: 22,
+    fontWeight: "600",
+    backgroundColor: "#fff0f5",
+    color: "#ff3f6c",
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   resendBtn: {
-    marginTop: 30,
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 40,
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 25,
+    backgroundColor: "#ff6b81",
   },
   resendText: {
-    color: '#581845',
+    marginLeft: 10,
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "600",
+    color: "#fff",
   },
 });

@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Image,
   Pressable,
-  Button,
+  ScrollView,
 } from 'react-native';
 import { Ionicons, EvilIcons, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -22,9 +22,7 @@ const PhotoScreen = () => {
 
   useEffect(() => {
     getRegistrationProgress('Photos').then(progressData => {
-      if (progressData) {
-        setImageUrls(progressData.imageUrls || ['', '', '', '', '', '']);
-      }
+      if (progressData) setImageUrls(progressData.imageUrls || ['', '', '', '', '', '']);
     });
   }, []);
 
@@ -45,10 +43,10 @@ const PhotoScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ marginTop: 80, marginHorizontal: 20 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
+        <View style={styles.header}>
           <View style={styles.icon}>
-            <MaterialIcons name="photo-camera-back" size={23} color="black" />
+            <MaterialIcons name="photo-camera-back" size={28} color="#ff3f6c" />
           </View>
           <Image
             style={styles.logo}
@@ -57,62 +55,34 @@ const PhotoScreen = () => {
         </View>
 
         <Text style={styles.title}>Pick your photos and videos</Text>
+        <Text style={styles.subtitle}>Add 4 to 6 photos of yourself 📸</Text>
 
-        {/* Photo grid: first 3 */}
-        <View style={{ marginTop: 20 }}>
-          <View style={styles.photoRow}>
-            {imageUrls.slice(0, 3).map((url, index) => (
-              <Pressable key={index} style={[styles.photoBox, { borderWidth: url ? 0 : 2 }]}>
-                {url ? (
-                  <Image source={{ uri: url }} style={styles.photoImage} />
-                ) : (
-                  <EvilIcons name="image" size={22} color="black" />
-                )}
-              </Pressable>
-            ))}
-          </View>
+        {/* Photo grid */}
+        <View style={styles.photoGrid}>
+          {imageUrls.map((url, index) => (
+            <Pressable key={index} style={[styles.photoBox, url && styles.photoBoxFilled]}>
+              {url ? <Image source={{ uri: url }} style={styles.photoImage} /> : <EvilIcons name="image" size={28} color="#aaa" />}
+            </Pressable>
+          ))}
         </View>
 
-        {/* Photo grid: next 3 */}
-        <View style={{ marginTop: 20 }}>
-          <View style={styles.photoRow}>
-            {imageUrls.slice(3, 6).map((url, index) => (
-              <Pressable key={index} style={[styles.photoBox, { borderWidth: url ? 0 : 2 }]}>
-                {url ? (
-                  <Image source={{ uri: url }} style={styles.photoImage} />
-                ) : (
-                  <EvilIcons name="image" size={22} color="black" />
-                )}
-              </Pressable>
-            ))}
-          </View>
-
-          <View style={{ marginVertical: 10 }}>
-            <Text style={{ color: 'gray', fontSize: 15 }}>Drag to reorder</Text>
-            <Text style={{ marginTop: 4, color: '#581845', fontWeight: '500', fontSize: 15 }}>
-              Add four to six photos
-            </Text>
-          </View>
-
-          <View style={{ marginTop: 25 }}>
-            <Text>Add a picture of yourself</Text>
-            <View style={styles.inputRow}>
-              <EvilIcons name="image" size={22} color="black" style={{ marginLeft: 8 }} />
-              <TextInput
-                value={imageUrl}
-                onChangeText={text => setImageUrl(text)}
-                placeholder="Enter your image url"
-                style={styles.textInput}
-              />
-            </View>
-            <Button title="Add Image" onPress={handleAddImage} />
-          </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            value={imageUrl}
+            onChangeText={setImageUrl}
+            placeholder="Paste image URL"
+            placeholderTextColor="#999"
+            style={styles.textInput}
+          />
+          <TouchableOpacity style={styles.addBtn} onPress={handleAddImage}>
+            <Text style={{ color: 'white', fontWeight: '600' }}>Add</Text>
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={handleNext} activeOpacity={0.8} style={styles.nextBtn}>
-          <Ionicons name="chevron-forward-circle-outline" size={45} color="#581845" />
+        <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
+          <Ionicons name="chevron-forward-circle" size={60} color="#ff3f6c" />
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -122,64 +92,102 @@ export default PhotoScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#fff0f5',
     paddingTop: Platform.OS === 'android' ? 35 : 0,
+    paddingHorizontal: 30,
   },
-  icon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 2,
-    borderColor: 'black',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    width: 100,
-    height: 40,
-    marginLeft: 10,
-  },
-  title: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    marginTop: 15,
-  },
-  photoRow: {
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 20,
+    marginTop: 60,
+    marginBottom: 25,
+  },
+  icon: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#ffe4e1',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
+  },
+  logo: {
+    width: 110,
+    height: 45,
+    marginLeft: 15,
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#ff3f6c',
+    marginBottom: 6,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#555',
+    marginBottom: 20,
+  },
+  photoGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 15,
+    marginBottom: 50,
   },
   photoBox: {
-    flex: 1,
+    width: '30%',
+    aspectRatio: 1,
+    backgroundColor: '#ffe4e1',
+    borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
     borderStyle: 'dashed',
-    borderColor: '#581845',
-    borderRadius: 10,
-    height: 80,
+    borderWidth: 2,
+    borderColor: '#ff3f6c',
+    overflow: 'hidden',
+  },
+  photoBoxFilled: {
+    borderWidth: 0,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 3,
   },
   photoImage: {
     width: '100%',
     height: '100%',
-    borderRadius: 10,
+    borderRadius: 15,
     resizeMode: 'cover',
   },
-  inputRow: {
+  inputContainer: {
     flexDirection: 'row',
+    marginBottom: 30,
     alignItems: 'center',
-    gap: 5,
-    borderRadius: 5,
-    marginTop: 2,
-    backgroundColor: '#DCDCDC',
-    paddingVertical: 6,
+    gap: 20,
   },
   textInput: {
-    color: 'gray',
-    marginVertical: 10,
-    width: 300,
+    flex: 1,
+    padding: 12,
+    borderRadius: 15,
+    backgroundColor: '#fff',
+    fontSize: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  addBtn: {
+    backgroundColor: '#ff3f6c',
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 15,
   },
   nextBtn: {
-    marginTop: 10,
     alignSelf: 'flex-end',
+    marginTop: 10,
   },
 });

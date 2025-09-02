@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,8 +8,8 @@ import {
   TouchableOpacity,
   Image,
   Pressable,
+  ScrollView,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -20,6 +21,7 @@ const PromptsScreen = () => {
     { question: '', answer: '' },
     { question: '', answer: '' },
   ]);
+
   const route = useRoute();
   const navigation = useNavigation();
 
@@ -31,12 +33,12 @@ const PromptsScreen = () => {
 
   const handleNext = () => {
     saveRegistrationProgress('Prompts', { prompts });
-    navigation.navigate("PreFinal");
+    navigation.navigate('PreFinal');
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <View style={styles.iconWrapper}>
             <AntDesign name="eye" size={23} color="black" />
@@ -54,16 +56,19 @@ const PromptsScreen = () => {
         <View style={styles.promptsContainer}>
           {prompts.map((item, index) => (
             <Pressable
+              key={index}
               onPress={() =>
                 navigation.navigate('ShowPromptsScreen', { prompts, index, setPrompts })
               }
-              style={styles.promptBox}
-              key={index}
+              style={[
+                styles.promptBox,
+                item?.question && item?.answer ? styles.promptFilled : styles.promptEmpty,
+              ]}
             >
               {item?.question && item?.answer ? (
                 <>
-                  <Text style={styles.promptText}>{item?.question}</Text>
-                  <Text style={styles.promptText}>{item?.answer}</Text>
+                  <Text style={styles.promptText}>{item.question}</Text>
+                  <Text style={styles.promptText}>{item.answer}</Text>
                 </>
               ) : (
                 <>
@@ -76,9 +81,9 @@ const PromptsScreen = () => {
         </View>
 
         <TouchableOpacity onPress={handleNext} style={styles.nextButton}>
-          <Ionicons name="chevron-forward-circle-outline" size={45} color="#581845" />
+          <Ionicons name="chevron-forward-circle-outline" size={55} color="#ff3f6c" />
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -88,66 +93,80 @@ export default PromptsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#fff0f5',
     paddingTop: Platform.OS === 'android' ? 35 : 0,
   },
   content: {
-    marginTop: 80,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 30,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 50,
+    marginBottom: 20,
   },
   iconWrapper: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 2,
-    borderColor: 'black',
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#ffe4e1',
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
   },
   logo: {
     width: 100,
     height: 40,
   },
   title: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    fontFamily: 'GeezaPro-Bold',
-    marginTop: 15,
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#ff3f6c',
+    marginBottom: 25,
   },
   promptsContainer: {
-    marginTop: 20,
     flexDirection: 'column',
     gap: 20,
   },
   promptBox: {
-    borderColor: '#707070',
-    borderWidth: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    borderStyle: 'dashed',
-    borderRadius: 10,
-    height: 70,
+    borderRadius: 15,
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  promptEmpty: {
+    borderWidth: 2,
+    borderColor: '#ff3f6c',
+    backgroundColor: '#fff0f5',
+  },
+  promptFilled: {
+    borderWidth: 0,
+    backgroundColor: '#ffe4e1',
   },
   promptText: {
     fontWeight: '600',
-    fontStyle: 'italic',
     fontSize: 15,
     textAlign: 'center',
+    color: '#333',
   },
   placeholderText: {
     color: 'gray',
-    fontWeight: '600',
-    fontStyle: 'italic',
-    fontSize: 15,
+    fontWeight: '500',
+    fontSize: 14,
     textAlign: 'center',
-    marginTop: 3,
   },
   nextButton: {
     marginTop: 30,
-    marginLeft: 'auto',
+    alignSelf: 'flex-end',
   },
 });

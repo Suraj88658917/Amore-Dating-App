@@ -1,3 +1,4 @@
+// LocationScreen.js
 import React, { useState } from 'react';
 import {
   StyleSheet,
@@ -8,7 +9,6 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -18,42 +18,35 @@ const LocationScreen = () => {
   const navigation = useNavigation();
   const [location] = useState('Demo City, Demo State');
 
-  // Replace with your own image URL
-  const customImageUrl = 'https://i.ibb.co/2M1sJ7F/custom-map.png'; // <-- Your custom image
-
   const handleNext = () => {
     saveRegistrationProgress('Location', { location });
-    navigation.navigate('GenderScreen'); // navigate to next screen
+    navigation.navigate('GenderScreen');
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ marginTop: 80, marginHorizontal: 20 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-          <View style={styles.icon}>
-            <MaterialCommunityIcons name="map-marker" size={23} color="black" />
-          </View>
-          <Image
-            style={styles.logo}
-            source={{ uri: 'https://cdn-icons-png.flaticon.com/128/10613/10613685.png' }}
-          />
+      <View style={styles.header}>
+        <View style={styles.icon}>
+          <MaterialCommunityIcons name="map-marker" size={26} color="#ff3f6c" />
         </View>
-
         <Text style={styles.title}>Where do you live?</Text>
+        <Text style={styles.subtitle}>This helps us show nearby matches 💌</Text>
+      </View>
 
-        {/* Custom Image */}
+      <View style={styles.mapContainer}>
         <Image
-          source={require("../assets/4.png")}
+          source={require("../assets/4.png")} // your map image
           style={styles.mapImage}
           resizeMode="cover"
         />
-
-        <Text style={styles.locationText}>{location}</Text>
-
-        <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
-          <Ionicons name="chevron-forward-circle-outline" size={45} color="#581845" />
-        </TouchableOpacity>
+        <View style={styles.locationCard}>
+          <Text style={styles.locationText}>{location}</Text>
+        </View>
       </View>
+
+      <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
+        <Ionicons name="chevron-forward-circle" size={55} color="#ff3f6c" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -63,41 +56,75 @@ export default LocationScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#fff0f5',
     paddingTop: Platform.OS === 'android' ? 35 : 0,
+    paddingHorizontal: 20,
+  },
+  header: {
+    alignItems: 'center',
+    marginTop: 60,
+    marginBottom: 30,
   },
   icon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 2,
-    borderColor: 'black',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#ffe4e1',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  logo: {
-    width: 100,
-    height: 40,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
   },
   title: {
-    fontSize: 25,
+    fontSize: 26,
     fontWeight: 'bold',
-    marginTop: 15,
+    color: '#ff3f6c',
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#555',
+    marginTop: 6,
+    textAlign: 'center',
+  },
+  mapContainer: {
+    alignItems: 'center',
+    marginVertical: 20,
+    borderRadius: 15,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 6,
   },
   mapImage: {
     width: '100%',
     height: 300,
-    marginTop: 20,
-    borderRadius: 5,
+  },
+  locationCard: {
+    position: 'absolute',
+    bottom: 15,
+    left: '50%',
+    transform: [{ translateX: -120 }],
+    width: 240,
+    paddingVertical: 10,
+    backgroundColor: '#ff6b81',
+    borderRadius: 15,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 4,
   },
   locationText: {
-    marginTop: 10,
+    color: '#fff',
     fontSize: 16,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: '600',
   },
   nextBtn: {
-    marginTop: 30,
+    marginTop: 40,
     alignSelf: 'flex-end',
   },
 });

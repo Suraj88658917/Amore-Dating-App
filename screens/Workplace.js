@@ -19,46 +19,42 @@ const WorkPlaceScreen = () => {
 
   useEffect(() => {
     getRegistrationProgress('WorkPlace').then(progressData => {
-      if (progressData) {
-        setWorkPlace(progressData.workPlace || '');
-      }
+      if (progressData) setWorkPlace(progressData.workPlace || '');
     });
   }, []);
 
   const handleNext = () => {
-    if (workPlace.trim() !== '') {
-      saveRegistrationProgress('WorkPlace', { workPlace });
-    }
+    if (workPlace.trim() !== '') saveRegistrationProgress('WorkPlace', { workPlace });
     navigation.navigate('JobTitle');
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ marginTop: 80, marginHorizontal: 20 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <View style={styles.icon}>
-            <MaterialCommunityIcons name="briefcase-outline" size={23} color="black" />
-          </View>
-          <Image
-            style={styles.logo}
-            source={{ uri: 'https://cdn-icons-png.flaticon.com/128/10613/10613685.png' }}
-          />
+      <View style={styles.header}>
+        <View style={styles.icon}>
+          <MaterialCommunityIcons name="briefcase-outline" size={28} color="#ff3f6c" />
         </View>
-
-        <Text style={styles.title}>Where do you work?</Text>
-
-        <TextInput
-          autoFocus
-          value={workPlace}
-          onChangeText={text => setWorkPlace(text)}
-          placeholder="Workplace"
-          style={styles.input}
+        <Image
+          style={styles.logo}
+          source={{ uri: 'https://cdn-icons-png.flaticon.com/128/10613/10613685.png' }}
         />
-
-        <TouchableOpacity onPress={handleNext} activeOpacity={0.8} style={styles.nextBtn}>
-          <Ionicons name="chevron-forward-circle-outline" size={45} color="#581845" />
-        </TouchableOpacity>
       </View>
+
+      <Text style={styles.title}>Where do you work?</Text>
+      <Text style={styles.subtitle}>This helps us show relevant people 💼</Text>
+
+      <TextInput
+        autoFocus
+        value={workPlace}
+        onChangeText={text => setWorkPlace(text)}
+        placeholder="Enter your workplace"
+        style={styles.input}
+        placeholderTextColor="#aaa"
+      />
+
+      <TouchableOpacity onPress={handleNext} style={styles.nextBtn} activeOpacity={0.8}>
+        <Ionicons name="chevron-forward-circle" size={60} color="#ff3f6c" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -68,38 +64,58 @@ export default WorkPlaceScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#fff0f5',
     paddingTop: Platform.OS === 'android' ? 35 : 0,
+    paddingHorizontal: 25,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 70,
+    marginBottom: 40,
   },
   icon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 2,
-    borderColor: 'black',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#ffe4e1',
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
   },
   logo: {
-    width: 100,
-    height: 40,
-    marginLeft: 10,
+    width: 110,
+    height: 45,
+    marginLeft: 15,
   },
   title: {
-    fontSize: 25,
+    fontSize: 26,
     fontWeight: 'bold',
-    marginTop: 15,
+    color: '#ff3f6c',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#555',
+    marginBottom: 25,
   },
   input: {
     width: '100%',
-    marginTop: 25,
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-    paddingBottom: 10,
-    fontSize: 22,
+    fontSize: 20,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 3,
+    marginBottom: 40,
   },
   nextBtn: {
-    marginTop: 30,
     alignSelf: 'flex-end',
   },
 });

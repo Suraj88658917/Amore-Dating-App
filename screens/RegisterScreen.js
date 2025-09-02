@@ -28,7 +28,7 @@ const handleRegister = async () => {
   setLoading(true);
 
   try {
-    const res = await fetch('http://10.66.39.47:8000/register', {
+    const res = await fetch('http://192.168.1.7:8000/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     padding: 20,
     marginTop: 40,
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: "pink",
   },
   logo: {
     height: 160,

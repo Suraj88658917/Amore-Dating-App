@@ -1,68 +1,86 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
   View,
   SafeAreaView,
-  TextInput,
-  TouchableOpacity,
-  Image,
   Platform,
-} from 'react-native';
-import { Ionicons, Fontisto } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
+import { Fontisto, Ionicons } from "@expo/vector-icons"; 
+import { useNavigation } from "@react-navigation/native";
+import {
+  getRegistrationProgress,
+  saveRegistrationProgress,
+} from "../utils/registrationUtils";
 
 const EmailScreen = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const navigation = useNavigation();
 
+  useEffect(() => {
+    getRegistrationProgress("Email").then((progressData) => {
+      if (progressData) {
+        setEmail(progressData.email || "");
+      }
+    });
+  }, []);
+
   const handleNext = () => {
-    if (email.trim() !== '') {
-      navigation.navigate('PasswordScreen', { email });
+    if (email.trim() !== "") {
+      saveRegistrationProgress("Email", { email });
     }
+    navigation.navigate("PasswordScreen", { email });
   };
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
-        <View style={styles.icon}>
-          <Fontisto name="email" size={26} color="black" />
-        </View>
-        <Image
-          style={styles.logo}
-          source={{
-            uri: 'https://cdn-icons-png.flaticon.com/128/10613/10613685.png',
-          }}
-        />
+        <Ionicons name="heart" size={60} color="#ff4d6d" />
+        <Text style={styles.headerText}>Find Your Match</Text>
       </View>
 
-      <View style={styles.form}>
-        <Text style={styles.title}>Provide your email</Text>
+      <View style={styles.content}>
+        <Text style={styles.title}>What’s your email?</Text>
         <Text style={styles.subtitle}>
-          Email verification helps us keep your account secure
+          We’ll use it to keep your account secure 💌
         </Text>
 
-        <TextInput
-          value={email}
-          onChangeText={setEmail}
-          autoFocus
-          placeholder="Enter your email"
-          placeholderTextColor="#BEBEBE"
-          style={styles.input}
-        />
+        {/* Input */}
+        <View style={styles.inputContainer}>
+          <Fontisto
+            name="email"
+            size={20}
+            color="#ff4d6d"
+            style={{ marginRight: 8 }}
+          />
+          <TextInput
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            placeholder="Enter your email"
+            placeholderTextColor={"#aaa"}
+            style={styles.input}
+            keyboardType="email-address"
+          />
+        </View>
 
-        <Text style={styles.note}>
-          Note: You will be asked to verify your email
-        </Text>
+        {/* Button */}
+        <TouchableOpacity
+          onPress={handleNext}
+          activeOpacity={0.8}
+          style={styles.nextButton}
+        >
+          <Text style={styles.nextText}>Next</Text>
+          <Ionicons
+            name="chevron-forward-circle"
+            size={28}
+            color="white"
+            style={{ marginLeft: 6 }}
+          />
+        </TouchableOpacity>
       </View>
-
-      <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
-        <Ionicons
-          name="chevron-forward-circle-outline"
-          size={45}
-          color="#581845"
-        />
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -72,37 +90,68 @@ export default EmailScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    paddingTop: Platform.OS === 'android' ? 35 : 0,
+    backgroundColor: "#fff0f5", // light romantic background
+    paddingTop: Platform.OS === "android" ? 35 : 0,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 80,
-    marginHorizontal: 20,
-    gap: 10,
+    marginTop: 60,
+    alignItems: "center",
   },
-  icon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 2,
-    borderColor: 'black',
-    justifyContent: 'center',
-    alignItems: 'center',
+  headerText: {
+    fontSize: 28,
+    color: "#ff4d6d",
+    fontWeight: "bold",
+    marginTop: 10,
   },
-  logo: { width: 100, height: 40 },
-  form: { marginTop: 30, marginHorizontal: 20 },
-  title: { fontSize: 25, fontWeight: 'bold' },
-  subtitle: { marginTop: 10, fontSize: 15, color: 'gray' },
-  input: {
-    width: '100%',
+  content: {
+    flex: 1,
+    marginTop: 60,
+    marginHorizontal: 25,
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  subtitle: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "gray",
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 25,
-    borderBottomWidth: 1,
-    borderBottomColor: 'black',
-    fontSize: 22,
-    paddingBottom: 10,
+    backgroundColor: "white",
+    borderRadius: 25,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    elevation: 4, // Android shadow
+    shadowColor: "#000", // iOS shadow
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
-  note: { color: 'gray', marginTop: 7, fontSize: 15 },
-  nextBtn: { marginTop: 30, marginLeft: 'auto', marginRight: 20 },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: "#333",
+  },
+  nextButton: {
+    marginTop: 40,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#ff4d6d",
+    paddingVertical: 15,
+    borderRadius: 30,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 5,
+  },
+  nextText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
 });

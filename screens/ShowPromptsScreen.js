@@ -102,39 +102,41 @@ const ShowPromptsScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
+        {/* Header */}
         <View style={styles.header}>
           <Text style={styles.viewAll}>View All</Text>
           <Text style={styles.title}>Prompts</Text>
         </View>
 
+        {/* Horizontal Categories */}
         <View style={styles.horizontalScrollWrapper}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {promptss.map((item, index) => (
-              <View key={index}>
-                <Pressable
-                  onPress={() => setOption(item.name)}
+              <Pressable
+                key={index}
+                onPress={() => setOption(item.name)}
+                style={[
+                  styles.optionButton,
+                  { backgroundColor: option === item.name ? '#ff3f6c' : 'white' },
+                ]}
+              >
+                <Text
                   style={[
-                    styles.optionButton,
-                    { backgroundColor: option === item.name ? '#581845' : 'white' },
+                    styles.optionText,
+                    { color: option === item.name ? 'white' : '#202020' },
                   ]}
                 >
-                  <Text
-                    style={[
-                      styles.optionText,
-                      { color: option === item.name ? 'white' : 'black' },
-                    ]}
-                  >
-                    {item.name}
-                  </Text>
-                </Pressable>
-              </View>
+                  {item.name}
+                </Text>
+              </Pressable>
             ))}
           </ScrollView>
         </View>
 
+        {/* Questions */}
         <View style={styles.questionsWrapper}>
           {promptss.map(
-            (item, index) =>
+            (item) =>
               option === item.name &&
               item.questions.map((question, idx) => (
                 <View key={idx}>
@@ -151,7 +153,6 @@ const ShowPromptsScreen = () => {
                   >
                     <Text style={styles.questionText}>{question.question}</Text>
                   </Pressable>
-                  <View style={styles.divider} />
                 </View>
               ))
           )}
@@ -166,54 +167,65 @@ export default ShowPromptsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#fff0f5', // soft pastel background
     paddingTop: Platform.OS === 'android' ? 35 : 0,
   },
   header: {
-    padding: 10,
+    padding: 15,
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   viewAll: {
     fontSize: 15,
-    fontWeight: '500',
-    color: '#581845',
+    fontWeight: '600',
+    color: '#ff3f6c',
   },
   title: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#581845',
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#ff3f6c',
   },
   horizontalScrollWrapper: {
-    marginHorizontal: 10,
-    marginTop: 20,
+    paddingLeft: 15,
+    marginTop: 10,
     flexDirection: 'row',
-    gap: 10,
   },
   optionButton: {
-    padding: 12,
-    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderRadius: 25,
     marginRight: 10,
+    borderWidth: 1,
+    borderColor: '#ff3f6c',
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 2,
   },
   optionText: {
-    textAlign: 'center',
     fontSize: 13,
+    fontWeight: '600',
+    textAlign: 'center',
   },
   questionsWrapper: {
-    marginTop: 6,
-    marginHorizontal: 12,
+    marginTop: 15,
+    paddingHorizontal: 15,
   },
   questionBox: {
-    marginVertical: 20,
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderRadius: 15,
+    backgroundColor: '#ffe4e1',
+    marginVertical: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 2,
   },
   questionText: {
     fontSize: 15,
     fontWeight: '500',
     color: '#202020',
-  },
-  divider: {
-    borderColor: '#E0E0E0',
-    borderWidth: 0.5,
   },
 });
