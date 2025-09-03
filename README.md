@@ -1,80 +1,77 @@
-💖 Amore Dating App
-Amore Dating App is a modern, full-featured dating application built with React Native and Expo, featuring authentication, user profile creation, a swipe-based matching interface, and chat functionality. Data is managed using local async storage and the app is ready for backend integration with MongoDB.
+💖 Amore – Dating App
+
+Amore is a modern full-stack mobile dating application built with React Native. It provides a smart matchmaking experience through swipe-based matching, user profiles, chat functionality, and secure authentication. 🚀
+
+📖 About
+
+Amore is designed to connect people and simplify online dating. The app focuses on user privacy, seamless navigation, and real-time interaction to deliver an engaging experience similar to top dating apps.
 
 ✨ Features
-📝 Authentication: Email/password registration, login, and verification flow
-👤 Onboarding: User profile setup via guided screens (name, email, birthdate, location, gender, prompts, photos, etc.)
-📱 Main App: Bottom tab navigation for browsing profiles, matches, chats, and profile view
-💬 Chat Functionality: Real-time chat room interface
-🎨 Profile Customization: Prompts, job info, hometown, photos, and more
-🚀 Splash & Start Screens: Onboarding experience with branding assets
-⚡ Prerequisites
-Node.js >= 16
-npm >= 8
-Expo CLI: Install via npm install -g expo-cli
-Android Studio or Xcode (for running on simulators)
-🚀 Getting Started
-1️⃣ Clone the Repository
-git clone https://github.com/<your-username>/amore-datingapp.git
-cd amore-datingapp
+
+👤 User Profiles – Create and manage personal dating profiles.
+
+🔄 Swipe-Based Matching – Intuitive swipe interface for discovering matches.
+
+💬 In-App Chat – Real-time messaging with matched users.
+
+🔐 Secure Authentication – Firebase login and registration for safe user sessions.
+
+🎨 Modern UI/UX – Smooth, user-friendly design for a delightful dating experience.
+
+📱 Cross-Platform – Works seamlessly on both Android and iOS.
+
+🛠 Technologies Used
+
+⚛ React Native (Frontend)
+
+🔐 Firebase Authentication
+
+🌐 REST APIs for chat, profiles & matchmaking
+
+🎛 React Navigation (Stack + Tabs)
+
+🎨 Custom UI Components / Styled UI
+
+🚀 Installation
+
+Clone the repository:
+
+git clone https://github.com/Suraj88658917/Amore-Dating-App.git
+cd Amore-Dating-App
 
 
-Expo CLI: Install via npm install -g expo-cli
+Install dependencies:
 
-Android Studio or Xcode (for running on simulators)
-
-Getting Started
-1. Clone the Repository
-bash
-git clone https://github.com/<your-username>/amore-datingapp.git
-cd amore-datingapp
-2. Install Dependencies
-bash
 npm install
-3. Start the App
-To launch in Expo Go (for Android, iOS, or web):
+# or
+yarn install
 
-bash
-npm start
-Or for platform-specific launch:
 
-bash
-npm run android
-npm run ios
-npm run web
-Project Structure
-Path	Purpose/Feature
-/App.js	Main entry point, navigation stack, and screen imports 
-/index.js	Registers root component with Expo 
-/screens/	Splash, login, registration, onboarding, chat, etc. 
-/Navigation1/BottomTab	Bottom tab navigator for core app flow 
-/components/	UI components like profile viewer, etc. 
-/AuthContext.js	Context logic for authentication, token storage 
-app.json	Expo config, app display options 
-package.json	Dependency and script definitions 
-babel.config.js	Babel transpiler setup 
-tsconfig.json	TypeScript configuration 
-Configuration
-App Name: Amore-DatingApp
+Run the app:
 
-Expo: Managed workflow with splash screen, icons, light UI style
+npm run android   # For Android  
+npm run ios       # For iOS  
 
-Dependencies: React Native, Expo, AsyncStorage, React Navigation, Axios, Vector icons, Reanimated, Card Stack Swiper
+📂 Project Structure
 
-Authentication Context
-Token management and session persistence via Context and AsyncStorage:
+App.js – Main app entry and navigation.
 
-Login sets userToken and stores it locally
+screens/ – Login, Register, Home, Profile, Chat, and Match screens.
 
-Logout clears the token
+components/ – Reusable UI components (buttons, cards, etc.).
 
-Session check on app startup using useEffect
+api/ – REST API integration for chat & matchmaking.
 
-Contributing
-Feel free to fork the repository and submit pull requests. Standard branching and PR review workflow is encouraged.
+assets/ – Icons, images, and branding.
 
-License
-This project is licensed under the MIT License.
+📸 Screenshots
 
-Assets/Credits
-Icons, splash images and graphics located under /assets. All UI artwork and branding are © Amo
+(Add screenshots or demo GIFs here – e.g., login, swipe screen, chat interface 💌)
+
+📬 Contact
+
+📧 Email: surajsaini1679@gmail.com
+
+💻 GitHub: Suraj88658917
+
+🔗 LinkedIn: Suraj Saini
